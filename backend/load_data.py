@@ -4,19 +4,31 @@ import psycopg2
 # Connect to PostgreSQL
 conn = psycopg2.connect(
     dbname="ecommerce_db",
-    user="your_username",
-    password="your_password",
+    user="krishkumar",
+    password="12345",
     host="localhost",
     port="5432"
 )
 cursor = conn.cursor()
-
+cursor.execute("TRUNCATE TABLE order_items, inventory_items, orders, products RESTART IDENTITY CASCADE;")
+conn.commit()
+# Read CSVs
 # Read CSVs
 orders = pd.read_csv("data/orders.csv")
-order_items = pd.read_csv("data/order_items.csv")
+order_items = pd.read_csv("data/order_items.csv")[[
+    "id",
+    "order_id",
+    "user_id",
+    "product_id",
+    "inventory_item_id",
+    "status",
+    "created_at",
+    "shipped_at",
+    "delivered_at",
+    "returned_at"
+]]
 products = pd.read_csv("data/products.csv")
 inventory = pd.read_csv("data/inventory_items.csv")
-
 # Create Tables
 cursor.execute("""
 CREATE TABLE IF NOT EXISTS orders (
