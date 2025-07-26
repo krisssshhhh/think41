@@ -1,28 +1,17 @@
 // components/ChatWindow.jsx
-import React, { useState } from "react";
+import React, { useContext } from "react";
 import MessageList from "./MessageList";
 import UserInput from "./UserInput";
+import { ChatContext } from "../context/ChatContext";
 import "./ChatWindow.css";
 
 const ChatWindow = () => {
-  const [messages, setMessages] = useState([]);
-
-  const handleSend = (msgText) => {
-    const userMsg = { sender: "user", text: msgText };
-    setMessages((prev) => [...prev, userMsg]);
-
-    // TODO: Call backend /api/chat
-    const aiMsg = {
-      sender: "ai",
-      text: "Loading response from AI..." // placeholder
-    };
-    setMessages((prev) => [...prev, aiMsg]);
-  };
+  const { messages } = useContext(ChatContext);
 
   return (
     <div className="chat-window">
       <MessageList messages={messages} />
-      <UserInput onSend={handleSend} />
+      <UserInput />
     </div>
   );
 };

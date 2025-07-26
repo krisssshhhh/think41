@@ -1,10 +1,9 @@
-// components/Message.jsx
 import React from "react";
-import './Message.css';
+import "./Message.css";
 
 const Message = ({ sender, text }) => {
   return (
-    <div className={`message ${sender === 'user' ? 'user' : 'ai'}`}>
+    <div className={`message ${sender === "user" ? "user" : "ai"}`}>
       <p>{text}</p>
     </div>
   );

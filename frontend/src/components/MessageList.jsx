@@ -1,8 +1,10 @@
-// components/MessageList.jsx
-import React from "react";
+import React, { useContext } from "react";
+import { ChatContext } from "../context/ChatContext";
 import Message from "./Message";
 
-const MessageList = ({ messages }) => {
+const MessageList = () => {
+  const { messages } = useContext(ChatContext);
+
   return (
     <div className="message-list">
       {messages.map((msg, idx) => (

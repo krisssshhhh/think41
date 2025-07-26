@@ -1,13 +1,16 @@
-// App.js
 import React from "react";
+import { ChatProvider } from "./context/ChatContext";
 import ChatWindow from "./components/ChatWindow";
+import "./App.css";
 
 function App() {
   return (
-    <div className="App">
-      <h2>🛍️ E-commerce Chatbot</h2>
-      <ChatWindow />
-    </div>
+    <ChatProvider>
+      <div className="App">
+        <h2>🧠 AI Chatbot</h2>
+        <ChatWindow />
+      </div>
+    </ChatProvider>
   );
 }
 
