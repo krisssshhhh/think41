@@ -1,0 +1,21 @@
+/* Message.css */
+.message {
+  max-width: 75%;
+  padding: 10px 15px;
+  border-radius: 12px;
+  line-height: 1.4;
+  font-size: 15px;
+  word-wrap: break-word;
+}
+
+.message.user {
+  align-self: flex-end;
+  background-color: #d1ecf1;
+  color: #0c5460;
+}
+
+.message.ai {
+  align-self: flex-start;
+  background-color: #f1f0f0;
+  color: #333;
+}
