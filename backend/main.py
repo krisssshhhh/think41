@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from llm_utils import ask_llm
 from db_utils import get_top_5_products, get_order_status, get_stock_for_product
@@ -6,23 +7,39 @@ import re
 
 app = FastAPI()
 
+# ✅ Allow frontend to access the backend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # In production, replace * with your frontend URL
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# ✅ Health check route
+@app.get("/")
+def root():
+    return {"message": "✅ Backend is live!"}
+
+# ✅ Request model
 class ChatRequest(BaseModel):
     user_id: str
     message: str
 
+# ✅ Main chat endpoint
 @app.post("/api/chat")
 def chat(req: ChatRequest):
     try:
         msg = req.message.lower()
 
-        # 🎯 Intent 1: Top sold products
+        # 🎯 Use Case 1: Top 5 Most Sold Products
         if "top" in msg and "product" in msg and "sold" in msg:
             top_products = get_top_5_products()
             product_list = "\n".join([f"{i+1}. {name} ({sold} sold)" for i, (name, sold) in enumerate(top_products)])
-            prompt = f"Here are the top 5 most sold products:\n{product_list}\n\nPlease summarize this in friendly tone."
+            prompt = f"Here are the top 5 most sold products:\n{product_list}\n\nPlease summarize this in a friendly tone."
             ai_reply = ask_llm(prompt)
 
-        # 🎯 Intent 2: Order Status
+        # 🎯 Use Case 2: Order Status
         elif "order id" in msg or "status of order" in msg:
             match = re.search(r"order\s+id\s+(\d+)", msg)
             if match:
@@ -38,7 +55,7 @@ def chat(req: ChatRequest):
             else:
                 ai_reply = "⚠️ Please provide a valid order ID like: 12345."
 
-        # 🎯 Intent 3: Stock check
+        # 🎯 Use Case 3: Stock Availability
         elif "how many" in msg and "in stock" in msg:
             match = re.search(r"how many (.+?) (are )?in stock", msg)
             if match:
@@ -49,7 +66,7 @@ def chat(req: ChatRequest):
             else:
                 ai_reply = "⚠️ Please specify a product name, like 'Classic T-Shirts'."
 
-        # 🧠 Fallback: let LLM answer
+        # 🧠 Fallback to LLM for general questions
         else:
             ai_reply = ask_llm(req.message)
 

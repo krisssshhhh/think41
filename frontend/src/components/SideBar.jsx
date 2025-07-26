@@ -1,7 +1,7 @@
 // components/Sidebar.jsx
 import React, { useContext } from "react";
 import { ChatContext } from "../context/ChatContext";
-import "./Sidebar.css";
+import "./SideBar.css";
 
 const Sidebar = () => {
   const { sessions, switchSession, saveSession, activeSession } = useContext(ChatContext);

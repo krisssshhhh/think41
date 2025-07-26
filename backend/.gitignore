@@ -1,2 +1,5 @@
 # Ignore data files
-data/*.csv
+backend/data/*.csv
+*.pyc
+__pycache__/
+.env

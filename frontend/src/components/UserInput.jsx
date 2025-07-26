@@ -1,43 +1,35 @@
-import React, { useContext } from "react";
+import React, { useState, useContext } from "react";
 import { ChatContext } from "../context/ChatContext";
+import { sendMessageToBot } from "../services/api";
 
-const UserInput = () => {
-  const { input, setInput, addMessage, setLoading } = useContext(ChatContext);
+export default function UserInput() {
+  const [input, setInput] = useState("");
+  const { userId, addMessage, setLoading } = useContext(ChatContext);
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSend = async () => {
     if (!input.trim()) return;
-
-    // Add user's message
-    const userMessage = { sender: "user", text: input };
-    addMessage(userMessage);
-    setInput("");
+    addMessage({ sender: "user", text: input });
     setLoading(true);
-
-    // Send request to backend
-    const response = await fetch("http://localhost:8000/api/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user_id: "krish", message: input }),
-    });
-
-    const data = await response.json();
-    const aiMessage = { sender: "ai", text: data.ai_response };
-    addMessage(aiMessage);
-    setLoading(false);
+    try {
+      const res = await sendMessageToBot(userId, input);
+      addMessage({ sender: "bot", text: res.ai_response });
+    } catch (err) {
+      addMessage({ sender: "bot", text: `❌ ${err.message}` });
+    } finally {
+      setLoading(false);
+      setInput("");
+    }
   };
 
   return (
-    <form className="user-input" onSubmit={handleSubmit}>
+    <div className="user-input">
       <input
-        type="text"
         value={input}
         onChange={(e) => setInput(e.target.value)}
-        placeholder="Type a message..."
+        onKeyPress={(e) => e.key === "Enter" && handleSend()}
+        placeholder="Type your message..."
       />
-      <button type="submit">Send</button>
-    </form>
+      <button onClick={handleSend}>Send</button>
+    </div>
   );
-};
-
-export default UserInput;
+}
