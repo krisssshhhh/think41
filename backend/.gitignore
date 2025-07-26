@@ -1,2 +1,2 @@
 # Ignore data files
-data/*.csvgit rm --cached data/*.csv
+data/*.csv
