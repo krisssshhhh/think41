@@ -1,21 +1,20 @@
-// context/ChatContext.jsx
 import React, { createContext, useState } from "react";
 
 export const ChatContext = createContext();
 
 export const ChatProvider = ({ children }) => {
+  const [userId] = useState("krish"); // ✅ added userId
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [sessions, setSessions] = useState([]); // ← 🆕 past sessions
-  const [activeSession, setActiveSession] = useState(null); // ← 🆕
+  const [sessions, setSessions] = useState([]);
+  const [activeSession, setActiveSession] = useState(null);
 
   const addMessage = (msg) => {
     setMessages((prev) => [...prev, msg]);
   };
 
   const switchSession = (sessionId) => {
-    // Simulate fetching messages from DB using session ID
     const session = sessions.find((s) => s.id === sessionId);
     if (session) {
       setMessages(session.messages);
@@ -36,6 +35,7 @@ export const ChatProvider = ({ children }) => {
   return (
     <ChatContext.Provider
       value={{
+        userId, // ✅ exposed here
         messages,
         input,
         loading,

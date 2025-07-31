@@ -1,6 +1,5 @@
 import psycopg2
 
-# Connection config (optional: move to .env)
 DB_CONFIG = {
     "dbname": "ecommerce_db",
     "user": "krishkumar",

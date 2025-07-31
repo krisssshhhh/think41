@@ -7,7 +7,7 @@ function App() {
   return (
     <ChatProvider>
       <div className="App">
-        <h2>🧠 AI Chatbot</h2>
+        <h2 >🧠 AI Chatbot</h2>
         <ChatWindow />
       </div>
     </ChatProvider>

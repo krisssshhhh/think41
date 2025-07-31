@@ -8,8 +8,12 @@ export default function UserInput() {
 
   const handleSend = async () => {
     if (!input.trim()) return;
+
+    // Add user's message and clear input immediately
     addMessage({ sender: "user", text: input });
+    setInput("");  // ✅ Clear input after sending
     setLoading(true);
+
     try {
       const res = await sendMessageToBot(userId, input);
       addMessage({ sender: "bot", text: res.ai_response });
@@ -17,7 +21,6 @@ export default function UserInput() {
       addMessage({ sender: "bot", text: `❌ ${err.message}` });
     } finally {
       setLoading(false);
-      setInput("");
     }
   };
 
